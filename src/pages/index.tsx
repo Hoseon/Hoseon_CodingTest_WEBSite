@@ -1,8 +1,6 @@
-"use client";
 import ProblemsTABLE from '@/components/ProblemsTable/ProblemsTABLE'
 import Topbar from '@/components/Topbar/Topbar'
 import useHasMounted from '@/hooks/useHasMounted';
-import Image from 'next/image'
 import { useState } from 'react';
 
 export default function Home() {

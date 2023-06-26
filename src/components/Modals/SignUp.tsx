@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, setLogLevel } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { authModalState } from "../atoms/authModalAtom";
 
 type SignupProps = {};
 
 const Signup: React.FC<SignupProps> = () => {
+    setLogLevel("debug");
 	const setAuthModalState = useSetRecoilState(authModalState);
 	const handleClick = () => {
 		setAuthModalState((prev) => ({ ...prev, type: "login" }));
@@ -38,8 +39,16 @@ const Signup: React.FC<SignupProps> = () => {
 				dislikedProblems: [],
 				solvedProblems: [],
 				starredProblems: [],
-			};
-			await setDoc(doc(firestore, "users", newUser.user.uid), userData);
+            };
+            await setDoc(doc(firestore, "users", newUser.user.uid), userData).then(
+                function (data) {
+                    console.log("성공 입니다." + data);
+                }, function (eror) { 
+                    console.log("성공 속 에러?", eror);
+                })
+                .catch(function (error) {
+                    console.log("성공 속 에러?", error);
+                });
 			router.push("/");
 		} catch (error: any) {
 			toast.error(error.message, { position: "top-center" });
