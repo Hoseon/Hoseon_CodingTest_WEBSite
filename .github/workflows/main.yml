@@ -1,0 +1,26 @@
+# .github/workflows/deploy.yml
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      # Pull Repo
+      - uses: actions/checkout@v3
+
+      # Github Secrets에서 API Key 받아온 후 .env 파일에 추가
+      - run: |
+          echo "REACT_APP_API_KEY=${{secrets.NEXT_PUBLIC_FIREBASE_API_KEY}}" >> .env
+          echo "REACT_APP_DOMAIN=${{secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}}" >> .env
+          echo "REACT_APP_PROJECT_ID=${{secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID}}" >> .env
+          echo "REACT_APP_BUCKET=${{secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}}" >> .env
+          echo "REACT_APP_SENDER_ID=${{secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}}" >> .env
+          echo "REACT_APP_APP_ID=${{secrets.NEXT_PUBLIC_APP_ID}}" >> .env
+      - run: cat .env
+
+      - run: npm install
+      - run: npm run build
